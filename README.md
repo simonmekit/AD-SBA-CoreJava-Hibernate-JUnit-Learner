@@ -109,3 +109,12 @@ implement interfaces:
 
 #### Workflow example
 ![workflow example](images/example.png)
+
+
+## Issues
+java: package org.junit.jupiter.api does not exist intellij idea
+
+workaround:
+You are trying to run your test so you need to set the scope of JUnit to "compile" 
+File->Project structure -> Module -> dependency:
+

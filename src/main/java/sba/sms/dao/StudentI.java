@@ -20,4 +20,5 @@ public interface StudentI {
     void registerStudentToCourse(String email, int courseId);
 
     List<Course> getStudentCourses(String email);
+
 }
