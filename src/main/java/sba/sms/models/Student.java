@@ -50,6 +50,12 @@ public class Student {
             inverseJoinColumns = {@JoinColumn(name = "courses_id")})
     private Set<Course> courses;
 
+    public Student(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
+
 }
 
 

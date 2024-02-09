@@ -12,10 +12,11 @@ import sba.sms.services.StudentService;
  * 'course' table.
  */
 public class CommandLine {
-    private CommandLine(){
+    private static final String PASSWORD = "password";
+
+    private CommandLine() {
         // Utility classes should not have public constructors
     }
-    private static final String PASSWORD = "password";
 
     /**
      * Creates and persist student object to the 'student' table and
@@ -25,11 +26,9 @@ public class CommandLine {
      * Uncomment the following code after creating both models and entities for ease of adding and dropping dummy data into the database, remember that
      * in hibernate.cfg.xml <code>hibernate.hbm2ddl.auto = create-drop </code> will create and drop the tables every time the application
      * re-runs.
-     *
-     *
      */
-    public static void addData(){
-        /*
+    public static void addData() {
+
 
         StudentService studentService = new StudentService();
         CourseService courseService = new CourseService();
@@ -49,6 +48,5 @@ public class CommandLine {
         courseService.createCourse(new Course("Web Services", "Raheem Abolfathzadeh"));
         courseService.createCourse(new Course("Microservices", "Eric Heilig"));
 
-        */
     }
 }

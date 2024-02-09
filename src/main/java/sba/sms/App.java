@@ -1,6 +1,7 @@
 package sba.sms;
 
 import lombok.extern.java.Log;
+import org.junit.jupiter.api.BeforeAll;
 import sba.sms.models.Course;
 import sba.sms.models.Student;
 import sba.sms.services.CourseService;
@@ -10,12 +11,13 @@ import sba.sms.utils.CommandLine;
 import java.util.List;
 import java.util.Scanner;
 
+
 /**
  * SBA Core Java Hibernate/Junit
  * Business Requirement:
  * The task is to create a basic School Management System
  * where students can register for courses, and view the course assigned to them.
- *<br />
+ * <br />
  * App uses <br />
  * Initialize dummy data: {@link CommandLine#addData()} <br />
  * Two models: {@link Student} & {@link Course} <br />
@@ -25,19 +27,38 @@ import java.util.Scanner;
  * <b style="color:red">WARNING! </b>
  * <b>DO NOT MODIFY THIS CODE</b>
  *
- * @author  Jafer Alhaboubi & LaTonya Lewis
+ * @author Jafer Alhaboubi & LaTonya Lewis
  * @since sba-core-java-hibernate-junit 1.0
  */
 
 @Log
 public class App {
-    static final  StudentService studentService = new StudentService();
-    static final  CourseService courseService = new CourseService();
+    static final StudentService studentService = new StudentService();
+    static final CourseService courseService = new CourseService();
 
     public static void main(String[] args) {
 
-       CommandLine.addData();
+        Thread createDatabase = new Thread(CommandLine::addData);
+        createDatabase.start();
+        try {
+            createDatabase.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+//        StudentService studentService = new StudentService();
+//        CourseService courseService = new CourseService();
+//        studentService.createStudent(new Student("reema@gmail.com", "reema brown", "password"));
+//        studentService.createStudent(new Student("annette@gmail.com", "annette allen", "password"));
+//
+//        courseService.createCourse(new Course("Java", "Roger Boaitey"));
+//        courseService.createCourse(new Course("Frontend", "William Roales"));
+
+
+        mainTest();
+    }
+
+    private static void mainTest() {
         Scanner input = new Scanner(System.in);
         int userInput;
         do {
@@ -50,7 +71,8 @@ public class App {
                 String password = input.next();
                 if (studentService.validateStudent(email, password)) {
                     printStudentCourses(email);
-                    System.out.printf("select # from menu: %n1.Register %s to class: %n2.Logout%n", studentService.getStudentByEmail(email).getName());
+                    System.out.printf("select # from menu: %n1.Register %s to class: %n2.Logout%n",
+                            studentService.getStudentByEmail(email).getName());
                     userInput = input.nextInt();
                     if (userInput == 2) {
                         System.exit(0);
@@ -66,7 +88,8 @@ public class App {
                         int courseId = input.nextInt();
                         if (courseId > 0 && courseId <= courseList.size()) {
                             studentService.registerStudentToCourse(email, (courseId));
-                            System.out.printf("successfully register %s to %s%n", studentService.getStudentByEmail(email).getName(), courseService.getCourseById(courseId).getName());
+                            System.out.printf("successfully register %s to %s%n", studentService.getStudentByEmail(email).getName(),
+                                    courseService.getCourseById(courseId).getName());
                             printStudentCourses(email);
                         } else {
                             System.out.printf("course id not found!%n");

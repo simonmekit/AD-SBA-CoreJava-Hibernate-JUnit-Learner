@@ -31,7 +31,7 @@ import java.util.Set;
 public class Course {
     @Id
     @NotNull
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "name")
@@ -44,10 +44,14 @@ public class Course {
     @Size(max = 50)
     private String instructor;
 
-    @ManyToMany (targetEntity = Student.class,
-            cascade = {CascadeType.DETACH,CascadeType.MERGE,
+    @ManyToMany(targetEntity = Student.class,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.REMOVE, CascadeType.PERSIST},
             fetch = FetchType.EAGER, mappedBy = "courses")
     private Set<Student> students;
 
+    public Course(String name, String instructor) {
+        this.name = name;
+        this.instructor = instructor;
+    }
 }

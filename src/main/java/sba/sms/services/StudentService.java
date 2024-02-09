@@ -16,6 +16,7 @@ import sba.sms.models.Course;
 import sba.sms.models.Student;
 import sba.sms.utils.HibernateUtil;
 
+import java.security.spec.ECField;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -28,25 +29,30 @@ import java.util.*;
 
 public class StudentService implements StudentI {
 
-    SessionFactory factory = new Configuration().configure().buildSessionFactory();
+    //  SessionFactory factory = new Configuration().configure().buildSessionFactory();
+    SessionFactory factory = HibernateUtil.getSessionFactory();
     Session session = null;
 
     @Override
     public List<Student> getAllStudents() {
-
         session = factory.openSession();
         String hql = "From Student";
         TypedQuery<Student> query = session.createQuery(hql, Student.class);
-        List<Student> students = query.getResultList();
+        List<Student> students;
+        try {
+            students = query.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
         session.close();
         return students;
     }
 
     @Override
     public void createStudent(Student student) {
+        session = factory.openSession();
         Transaction t = session.beginTransaction();
         try {
-            session = factory.openSession();
             session.persist(student);
             t.commit();
         } catch (Exception e) {
@@ -64,7 +70,13 @@ public class StudentService implements StudentI {
         session = factory.openSession();
         TypedQuery<Student> query = session.createQuery("From Student s WHERE s.email = :email");
         query.setParameter("email", email);
-        Student student = query.getSingleResult();
+        Student student;
+        try {
+            student = query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+
         session.close();
         return student;
     }
@@ -73,10 +85,17 @@ public class StudentService implements StudentI {
     public boolean validateStudent(String email, String password) {
 
         session = factory.openSession();
-        String hql = "From Student s where s.email = " + email + " AND s.password = " +
-                password;
+        String hql = "From Student s where s.email = :email AND s.password = :password";
         TypedQuery<Student> query = session.createQuery(hql, Student.class);
-        Student student = query.getSingleResult();
+        query.setParameter("email", email);
+        query.setParameter("password", password);
+        Student student = null;
+        try {
+            student = query.getSingleResult();
+        } catch (Exception e) {
+            return false;
+        }
+
         session.close();
 
         return student != null;
@@ -86,13 +105,14 @@ public class StudentService implements StudentI {
     public void registerStudentToCourse(String email, int courseId) {
         session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-        String hql = "FROM Student s where s.email = " + email;
+        String hql = "FROM Student s where s.email = :email";
         TypedQuery<Student> query = session.createQuery(hql, Student.class);
+        query.setParameter("email", email);
         Student student = query.getSingleResult();
 
-        String hql2 = "From Course c where c.id = " + courseId;
+        String hql2 = "From Course c where c.id = :courseId";
         TypedQuery<Course> query1 = session.createQuery(hql2, Course.class);
-
+        query1.setParameter("courseId", courseId);
         Course course = query1.getSingleResult();
         Set<Course> courseSet = new HashSet<>();
         courseSet.add(course);
@@ -106,11 +126,35 @@ public class StudentService implements StudentI {
     @Override
     public List<Course> getStudentCourses(String email) {
         session = factory.openSession();
-        String hql = "Select s From Student s where s.email = " + email;
+        String hql = "Select s From Student s where s.email = :email";
         TypedQuery<Student> query = session.createQuery(hql, Student.class);
+        query.setParameter("email", email);
         Student student = query.getSingleResult();
         Set<Course> courses = student.getCourses();
-
         return new ArrayList<>(courses);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudentService that = (StudentService) o;
+        session = factory.openSession();
+        return Objects.equals(factory, that.factory) && Objects.equals(session, that.session);
+    }
+
+    @Override
+    public int hashCode() {
+        session = factory.openSession();
+        return Objects.hash(factory, session);
+    }
+
+    @Override
+    public String toString() {
+        session = factory.openSession();
+        return "StudentService{" +
+                "factory=" + factory +
+                ", session=" + session +
+                '}';
     }
 }
