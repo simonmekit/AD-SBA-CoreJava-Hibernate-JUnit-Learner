@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class StudentServiceTest {
 
@@ -19,9 +20,8 @@ public class StudentServiceTest {
     @Test
     public void studEval() {
         //Negative testing
-        assertEquals(true, studentService.validateStudent("example@gmail.com", "wrong-password"));
+        assertFalse(studentService.validateStudent("example@gmail.com", "wrong-password"));
 
     }
-
 
 }

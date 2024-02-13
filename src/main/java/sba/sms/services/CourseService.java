@@ -23,10 +23,12 @@ import java.util.List;
  */
 public class CourseService implements CourseI {
 
+    SessionFactory factory = HibernateUtil.getSessionFactory();
+
     @Override
     public void createCourse(Course course) {
         //SessionFactory factory = new Configuration().configure().buildSessionFactory();
-        SessionFactory factory = HibernateUtil.getSessionFactory();
+
         Session session = factory.openSession();
         Transaction transaction = null;
         try {
@@ -45,7 +47,6 @@ public class CourseService implements CourseI {
 
     @Override
     public Course getCourseById(int courseId) {
-        SessionFactory factory = new Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
         // Transaction transaction = session.beginTransaction();
         Course course = null;
@@ -65,13 +66,13 @@ public class CourseService implements CourseI {
 
     @Override
     public List<Course> getAllCourses() {
-        SessionFactory factory = new Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
         TypedQuery<Course> query = session.createQuery("FROM Course ", Course.class);
         List<Course> courses;
         try {
             courses = query.getResultList();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 

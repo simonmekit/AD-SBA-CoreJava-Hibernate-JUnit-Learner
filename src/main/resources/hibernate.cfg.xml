@@ -7,7 +7,8 @@
 
         <!-- MySQL Database -->
         <!-- Drop and re-create the database on startup -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <!-- <property name="hibernate.hbm2ddl.auto">update</property>-->
 
         <!-- Database connection settings -->
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
@@ -26,8 +27,7 @@
         <!--   Mapping entity file -->
         <mapping class="sba.sms.models.Student"/>
         <mapping class="sba.sms.models.Course"/>
-        <mapping class="sba.sms.models.Person"/>
-        <mapping class="sba.sms.models.Address"/>
+        <mapping class="sba.sms.models.Employee"/>
 
     </session-factory>
 </hibernate-configuration>

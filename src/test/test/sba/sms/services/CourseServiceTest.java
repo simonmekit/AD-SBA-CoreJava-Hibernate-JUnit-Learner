@@ -1,15 +1,18 @@
 package sba.sms.services;
 
 import org.junit.jupiter.api.Test;
+import sba.sms.utils.CommandLine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CourseServiceTest {
     static CourseService courseService = new CourseService();
 
+    // CommandLine.addData();
     @Test
     public void readCourse() {
-        assertEquals(null, courseService.getCourseById(100000));
+        assertNull(courseService.getCourseById(10000));
 
     }
 

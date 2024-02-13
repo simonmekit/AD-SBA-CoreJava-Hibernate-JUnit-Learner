@@ -1,12 +1,8 @@
-package sba.sms.utils;
+package sba.sms.services;
 
-import sba.sms.dao.EmployeeI;
 import sba.sms.models.Course;
 import sba.sms.models.Employee;
 import sba.sms.models.Student;
-import sba.sms.services.CourseService;
-import sba.sms.services.EmployeeService;
-import sba.sms.services.StudentService;
 
 /**
  * CommandLine is a Utility class that runs each time the application
